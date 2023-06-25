@@ -2,6 +2,7 @@ package com.example.composenewsapp.feature_get_news.presentation
 
 import android.util.Log
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.State
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
@@ -19,7 +20,10 @@ fun NavGraph(
     modifier: Modifier = Modifier,
     navHostController: NavHostController = rememberNavController(),
     startDestination: String = Screen.NewsHomeScreen.route,
-    viewModel: NewsViewModel
+    viewModel: NewsViewModel,
+    callback: () -> Unit = {},
+    onRemoved: () -> Unit = {},
+    disableSearchCallback: () -> Unit = {}
 ) {
     NavHost(
         modifier = modifier,
@@ -39,12 +43,13 @@ fun NavGraph(
         ) { navBackStackEntry ->
             val articleUrl = navBackStackEntry.arguments?.getString("article_url")
             articleUrl?.let { articleUrl ->
-                NewsWebViewScreen(url = articleUrl)
+                NewsWebViewScreen(url = articleUrl, onRemoved = onRemoved)
+                callback.invoke()
                 Log.d(TAG, "article url arg: $articleUrl")
             }
         }
         composable(route = Screen.NewsSearchScreen.route) {
-            NewsSearchScreen()
+            NewsSearchScreen(disableSearchCallback=disableSearchCallback)
         }
     }
 }

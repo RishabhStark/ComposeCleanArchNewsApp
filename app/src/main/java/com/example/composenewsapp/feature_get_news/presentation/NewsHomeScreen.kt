@@ -1,8 +1,10 @@
 package com.example.composenewsapp.feature_get_news.presentation
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.State
@@ -17,7 +19,7 @@ fun NewsHomeScreen(
     loadNextItems: () -> Unit
 ) {
     val lazyListState = rememberLazyListState()
-    LazyColumn(modifier = Modifier.fillMaxSize(), state = lazyListState) {
+    LazyColumn(modifier = Modifier.fillMaxSize().background(MaterialTheme.colors.primary), state = lazyListState) {
         items(newsState.value.headlines.size) { index ->
             LaunchedEffect(key1 = lazyListState)
             {

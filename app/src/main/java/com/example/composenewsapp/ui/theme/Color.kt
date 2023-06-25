@@ -2,7 +2,9 @@ package com.example.composenewsapp.ui.theme
 
 import androidx.compose.ui.graphics.Color
 
-val Purple200 = Color(0xFFBB86FC)
-val Purple500 = Color(0xFF2A98F0)
-val Purple700 = Color(0xFF125A94)
+val Blue500 = Color(0xFF2A98F0)
+val Blue700 = Color(0xFF125A94)
 val Teal200 = Color(0xFF03DAC5)
+
+val DarkPrimary=Color(32, 30, 30, 245)
+val DarkPrimaryVariant=Color(2, 2, 2, 245)

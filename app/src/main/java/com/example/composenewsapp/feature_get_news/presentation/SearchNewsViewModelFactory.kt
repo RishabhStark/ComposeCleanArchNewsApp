@@ -12,3 +12,11 @@ class NewsViewModelFactory(private val newsRepository: NewsRepository) : ViewMod
         throw java.lang.IllegalArgumentException("Unknown ViewModel class")
     }
 }
+class SearchNewsViewModelFactory(private val newsRepository: NewsRepository) : ViewModelProvider.Factory {
+    override fun <T : ViewModel> create(modelClass: Class<T>): T {
+        if (modelClass.isAssignableFrom(NewsSearchScreenViewModel::class.java)) {
+            return NewsSearchScreenViewModel(newsRepository) as T
+        }
+        throw java.lang.IllegalArgumentException("Unknown ViewModel class")
+    }
+}

@@ -45,6 +45,7 @@ class NewsViewModel(private val newsRepository: NewsRepository) : ViewModel() {
                     }, page = nextKey,
                     endReached = newsDto.articles.isEmpty()
                 )
+            Log.d(TAG,"onSuccess: items: ${_newsState.value}")
             Log.d(TAG, "onSuccess: pagination end reached: ${newsDto.articles.isEmpty()}")
         }
     )

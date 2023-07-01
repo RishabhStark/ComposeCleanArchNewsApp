@@ -24,7 +24,32 @@ class NewsRepository(private val apiService: NewsApiService) {
         if (!response.isSuccessful) {
             return Resource.Error(message = response.errorBody().toString())
         }
-        Log.d(TAG,"getTopHeadlines: ${response.body()}")
+        Log.d(TAG, "getTopHeadlines: ${response.body()}")
+        return Resource.Success(response.body())
+    }
+
+    suspend fun searchArticles(q: String = "", pageNumber: Int = 1): Resource<NewsDto> {
+        var response: Response<NewsDto>?
+        try {
+            response = apiService.searchArticles(q, pageNumber)
+            Log.d(
+                TAG,
+                "searchArticles: making api call query: $q page number: $pageNumber--> ${response.body()}"
+            )
+        } catch (httpException: HttpException) {
+            Log.d(TAG, "searchArticles: ${httpException.message}")
+            return Resource.Error(message = httpException.message)
+        } catch (ioException: IOException) {
+            Log.d(TAG, "searchArticles: ${ioException.message}")
+            return Resource.Error(message = ioException.message)
+        } catch (e: java.lang.Exception) {
+            Log.d(TAG, "searchArticles: ${e.message}")
+            return Resource.Error(message = e.message)
+        }
+        if (!response.isSuccessful) {
+            return Resource.Error(message = response.errorBody().toString())
+        }
+        Log.d(TAG, "searchArticles: ${response.body()?.articles?.size}")
         return Resource.Success(response.body())
     }
 }

@@ -5,13 +5,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
-import com.example.composenewsapp.feature_get_news.data.NewsRepository
+import com.example.composenewsapp.feature_get_news.data.NewsRepositoryImpl
 import com.example.composenewsapp.feature_get_news.data.remote.RetrofitClient
 import com.example.composenewsapp.feature_get_news.utils.Screen
 
@@ -30,7 +31,7 @@ fun NavGraph(
     ) {
         composable(route = Screen.NewsHomeScreen.route) {
             val viewModel: NewsViewModel =
-                viewModel(factory = NewsViewModelFactory(NewsRepository(RetrofitClient.newsApi)))
+                viewModel(factory = NewsViewModelFactory(NewsRepositoryImpl(RetrofitClient.newsApi)))
             NewsHomeScreen(
                 navHostController,
                 viewModel.newsState.collectAsState(),
@@ -49,9 +50,19 @@ fun NavGraph(
         }
         composable(route = Screen.NewsSearchScreen.route) {
             val viewModel: NewsSearchScreenViewModel =
-                viewModel(factory = SearchNewsViewModelFactory(NewsRepository(RetrofitClient.newsApi)))
-            NewsSearchScreen(navController=navHostController, newsState = viewModel.newsState.collectAsState(), loadNextItems = viewModel::loadNextItems,
-            onSearch = viewModel::onSearch, searchState = viewModel.searchQuery.collectAsState())
+                viewModel(factory = SearchNewsViewModelFactory(NewsRepositoryImpl(RetrofitClient.newsApi)))
+            NewsSearchScreen(
+                navController = navHostController,
+                newsState = viewModel.newsState.collectAsState(),
+                loadNextItems = viewModel::loadNextItems,
+                onSearch = viewModel::onSearch,
+                searchState = viewModel.searchQuery.collectAsState()
+            )
         }
     }
+}
+
+@Composable
+fun <T> NavBackStackEntry.sharedViewModel(navHostController: NavHostController) {
+val parentBackStackEntry=destination.parent?.route
 }

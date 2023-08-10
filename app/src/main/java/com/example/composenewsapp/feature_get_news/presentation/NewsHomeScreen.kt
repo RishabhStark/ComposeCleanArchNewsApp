@@ -1,5 +1,6 @@
 package com.example.composenewsapp.feature_get_news.presentation
 
+import android.widget.ProgressBar
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
@@ -12,16 +13,16 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.material.FloatingActionButton
-import androidx.compose.material.Icon
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.TextField
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.composenewsapp.feature_get_news.utils.Screen
 import kotlinx.coroutines.launch
@@ -35,20 +36,28 @@ fun NewsHomeScreen(
 ) {
     val scope = rememberCoroutineScope()
     val lazyListState = rememberLazyListState()
-    val isFabVisible = remember { derivedStateOf { lazyListState.firstVisibleItemIndex > 0 } }
+    val isFabVisible by remember { derivedStateOf { lazyListState.firstVisibleItemIndex > 0 } }
 
     Box(modifier = Modifier.fillMaxSize()) {
         Column(modifier = Modifier.fillMaxSize()) {
             AnimatedVisibility(
-                visible = !isFabVisible.value,
+                visible = !isFabVisible,
                 enter = fadeIn(),
                 exit = fadeOut()
             ) {
-                TextField(value = "", onValueChange = {}, modifier = Modifier
-                    .clickable {
-                        navController.navigate(Screen.NewsSearchScreen.route)
-                    }
-                    .fillMaxWidth(), enabled = false)
+                TextField(value = "",
+                    placeholder = {
+                        Text(text = "Enter text to search...")
+                    },
+                    onValueChange = {},
+                    shape = RoundedCornerShape(8.dp),
+                    modifier = Modifier
+                        .clickable {
+                            navController.navigate(Screen.NewsSearchScreen.route)
+                        }
+                        .fillMaxWidth(),
+                    enabled = false)
+
             }
             LazyColumn(
                 modifier = Modifier
@@ -73,12 +82,18 @@ fun NewsHomeScreen(
                 }
             }
         }
-        if (isFabVisible.value) {
+        if (isFabVisible) {
             FloatingActionButton(onClick = {
                 scope.launch { lazyListState.animateScrollToItem(0) }
             }, modifier = Modifier.align(Alignment.BottomCenter)) {
                 Icon(Icons.Default.KeyboardArrowUp, "")
             }
+        }
+        if (newsState.value.isLoading) {
+            CircularProgressIndicator(
+                color = Color.Blue,
+                modifier = Modifier.align(Alignment.Center)
+            )
         }
     }
 }

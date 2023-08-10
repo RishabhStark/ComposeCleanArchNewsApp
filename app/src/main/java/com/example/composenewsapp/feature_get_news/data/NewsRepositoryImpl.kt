@@ -3,14 +3,18 @@ package com.example.composenewsapp.feature_get_news.data
 import android.util.Log
 import com.example.composenewsapp.feature_get_news.data.remote.NewsApiService
 import com.example.composenewsapp.feature_get_news.data.remote.dto.NewsDto
+import com.example.composenewsapp.feature_get_news.domain.NewsRepository
 import com.example.composenewsapp.utils.Resource
+import com.google.gson.Gson
+import okhttp3.ResponseBody
 import okio.IOException
 import retrofit2.HttpException
 import retrofit2.Response
 
-class NewsRepository(private val apiService: NewsApiService) {
+class NewsRepositoryImpl(private val apiService: NewsApiService) :
+    NewsRepository {
     private val TAG = "NewsRepository"
-    suspend fun getTopHeadlines(country: String = "in", pageNumber: Int): Resource<NewsDto> {
+    override suspend fun getTopHeadlines(country: String, pageNumber: Int): Resource<NewsDto> {
         var response: Response<NewsDto>?
         try {
             response = apiService.getTopHeadlines(country, pageNumber)
@@ -28,13 +32,13 @@ class NewsRepository(private val apiService: NewsApiService) {
         return Resource.Success(response.body())
     }
 
-    suspend fun searchArticles(q: String = "", pageNumber: Int = 1): Resource<NewsDto> {
+    override suspend fun searchArticles(q: String, pageNumber: Int): Resource<NewsDto> {
         var response: Response<NewsDto>?
         try {
             response = apiService.searchArticles(q, pageNumber)
             Log.d(
                 TAG,
-                "searchArticles: making api call query: $q page number: $pageNumber--> ${response.body()}"
+                "searchArticles: making api call query: $q page number: $pageNumber--> ${response.body()} msg: ${response.message()}"
             )
         } catch (httpException: HttpException) {
             Log.d(TAG, "searchArticles: ${httpException.message}")

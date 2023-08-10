@@ -15,17 +15,19 @@ class NewsPaginator<Item, Key>(
             return
         }
         isMakingRequest = true
+        //start loading
         onLoadUpdated(true)
-        val result = onRequest(currentkey)
+        val result: Resource<Item> = onRequest(currentkey)
         isMakingRequest = false
         val item = result.data
         if (result !is Resource.Success || item == null) {
             onError((result as Resource.Error).message)
-            onLoadUpdated(false)
+            onLoadUpdated(true)
             return
         }
         currentkey = getNextKey(item)
         onSuccess(item, currentkey)
+        //finished loading
         onLoadUpdated(false)
     }
 

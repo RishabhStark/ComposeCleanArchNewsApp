@@ -11,6 +11,7 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -26,6 +27,8 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import coil.compose.AsyncImagePainter
 import coil.compose.rememberAsyncImagePainter
+import coil.request.CachePolicy
+import coil.request.ImageRequest
 import coil.request.ImageResult
 import com.example.composenewsapp.feature_get_news.utils.Screen
 import kotlinx.coroutines.launch
@@ -71,6 +74,17 @@ fun NewsCard(
 
 @Composable
 fun NewsImage(url: String) {
+    val context = LocalContext.current
+       val cachedPainter= rememberAsyncImagePainter(
+            model = remember(url) {
+                ImageRequest.Builder(context)
+                    .data(url).diskCachePolicy(CachePolicy.ENABLED)
+                    .memoryCachePolicy(CachePolicy.ENABLED)
+                    .diskCacheKey(url)
+                    .memoryCacheKey(url)
+                    .build()
+            }
+        )
     val painter =
         rememberAsyncImagePainter(model = url, contentScale = ContentScale.Crop)
     val scope = rememberCoroutineScope()

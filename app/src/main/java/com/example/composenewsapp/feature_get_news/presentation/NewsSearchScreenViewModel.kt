@@ -2,7 +2,7 @@ package com.example.composenewsapp.feature_get_news.presentation
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.composenewsapp.feature_get_news.data.NewsRepository
+import com.example.composenewsapp.feature_get_news.data.NewsRepositoryImpl
 import com.example.composenewsapp.feature_get_news.data.remote.dto.NewsDto
 import com.example.composenewsapp.utils.NewsPaginator
 import kotlinx.coroutines.Job
@@ -11,7 +11,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
-class NewsSearchScreenViewModel(private val repository: NewsRepository) : ViewModel() {
+class NewsSearchScreenViewModel(private val repository: NewsRepositoryImpl) : ViewModel() {
     private val _searchQuery = MutableStateFlow("")
     val searchQuery = _searchQuery.asStateFlow()
     var job: Job? = null
